@@ -1,4 +1,4 @@
-CREATE TABLE school;
+CREATE DATABASE school;
 DROP TABLE IF EXISTS student_courses;
 DROP TABLE IF EXISTS students;
 DROP TABLE IF EXISTS groups;
