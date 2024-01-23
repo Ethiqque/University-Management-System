@@ -12,10 +12,10 @@ public class InsertingInDB {
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement("""
                 INSERT INTO courses (course_name, course_description)
-                VALUES ('Biology', 'The study of living organisms and their functions'), 
+                VALUES ('Biology', 'The study of living organisms and their functions'),
                        ('Art', 'Creative expression through visual or performance mediums'),
                        ('Math', 'The language of numbers, patterns, and logic.'),
-                       ('Geography', 'Exploration of Earth''s physical and cultural features'), 
+                       ('Geography', 'Exploration of Earth''s physical and cultural features'),
                        ('Music', 'Creating and enjoying harmonious sound compositions'),
                        ('English', 'Language study and literature appreciation'),
                        ('France', 'Language, culture, and communication in French'),
@@ -27,3 +27,7 @@ public class InsertingInDB {
         }
     }
 }
+
+
+
+
