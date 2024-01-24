@@ -1,5 +1,9 @@
 
-CREATE TABLE IF NOT EXISTS school();
+--CREATE DATABASE school;
+
+--CREATE USER "user" WITH PASSWORD 'QWERTY';
+
+GRANT ALL PRIVileges ON DATABASE school TO "user";
 
 DROP TABLE IF EXISTS student_courses;
 DROP TABLE IF EXISTS students;
