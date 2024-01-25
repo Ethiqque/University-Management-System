@@ -13,70 +13,86 @@ import java.util.HashSet;
 
 public class DataGenerator {
 
-    private static final String[] FIRST_NAMES = {"John", "Jane", "Mike", "Sue", "Tom", "Lily", "Chris", "Anna", "James", "Karen"};
-    private static final String[] LAST_NAMES = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson"};
-private static final String[] COURSES = {"Math", "Biology", "Art", "Music", "English", "Physics", "Chemistry", "History", "Geography", "Physical Education"};
-    private static Random random = new Random();
+    private static final String[] FIRST_NAMES = {"John", "Jane", "Mike", "Sue", "Tom", "Lily", "Chris", "Anna", "James", "Karen", "Ivan", "Masha", "Georgiy", "Egor", "Max", "Martin", "Romeo", "Misha", "Jonny", "Kate"};
+    private static final String[] LAST_NAMES = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson", "Carnnegi", "Paul", "Martin", "Lee", "Perez", "Thomson", "Lewis", "Allen", "Scott", "Flores"};
+    private static final String[] COURSES = {"Math", "Biology", "Art", "Music", "English", "Physics", "Chemistry", "History", "Geography", "Physical Education"};
+    private static final Random random = new Random();
 
-    public static void generateTestData() throws SQLException {
-        generateGroups(10);
-        generateCourses();
-        generateStudents(200);
-        assignStudentsToGroups();
-        assignCoursesToStudents();
-        DatabaseConnection.getConnection().close();
+    private static final int GROUP_COUNT = 10;
+
+    public static void generateTestData() {
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            generateGroups(connection, GROUP_COUNT);
+            generateCourses(connection);
+            generateStudents(connection, 200);
+            assignStudentsToGroups(connection);
+            assignCoursesToStudents(connection);
+        } catch (SQLException e) {
+            throw new RuntimeException("Error generating test data", e);
+        }
     }
 
-    private static void generateGroups(int count) {
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement("INSERT INTO groups (group_name) VALUES (?)")) {
+    private static void generateGroups(Connection connection, int count) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO groups (group_name) VALUES (?)")) {
             for (int i = 0; i < count; i++) {
                 String groupName = "G" + (i + 1);
                 statement.setString(1, groupName);
                 statement.executeUpdate();
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error generating groups", e);
         }
     }
 
-    private static void generateCourses() {
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement("INSERT INTO courses (course_name, course_description) VALUES (?, ?)")) {
+    private static void generateCourses(Connection connection) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO courses (course_name, course_description) VALUES (?, ?)")) {
             for (String course : COURSES) {
                 statement.setString(1, course);
                 statement.setString(2, "Description of " + course);
                 statement.executeUpdate();
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error generating courses", e);
         }
     }
 
-    private static void generateStudents(int count) {
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement("INSERT INTO students (first_name, last_name) VALUES (?, ?)")) {
+    private static void generateStudents(Connection connection, int count) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO students (first_name, last_name) VALUES (?, ?)")) {
+
+            Set<String> existingNames = getExistingNames(connection);
+
             for (int i = 0; i < count; i++) {
-                String firstName = FIRST_NAMES[random.nextInt(FIRST_NAMES.length)];
-                String lastName = LAST_NAMES[random.nextInt(LAST_NAMES.length)];
+                String firstName;
+                String lastName;
+
+                do {
+                    firstName = FIRST_NAMES[random.nextInt(FIRST_NAMES.length)];
+                    lastName = LAST_NAMES[random.nextInt(LAST_NAMES.length)];
+                } while (existingNames.contains(firstName + " " + lastName));
+
                 statement.setString(1, firstName);
                 statement.setString(2, lastName);
                 statement.executeUpdate();
+                existingNames.add(firstName + " " + lastName);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error generating students", e);
         }
     }
 
-// Existing methods (generateGroups, generateCourses, generateStudents) remain the same
+    private static Set<String> getExistingNames(Connection connection) throws SQLException {
+        Set<String> existingNames = new HashSet<>();
+        try (PreparedStatement statement = connection.prepareStatement("SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM students");
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                String fullName = resultSet.getString("full_name");
+                existingNames.add(fullName);
+            }
+        }
+        return existingNames;
+    }
 
-    private static void assignStudentsToGroups() {
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            PreparedStatement updateStmt = connection.prepareStatement("UPDATE students SET group_id = ? WHERE student_id = ?");
-            PreparedStatement selectStmt = connection.prepareStatement("SELECT student_id FROM students");
+    private static void assignStudentsToGroups(Connection connection) throws SQLException {
+        try (PreparedStatement updateStmt = connection.prepareStatement("UPDATE students SET group_id = ? WHERE student_id = ?");
+             PreparedStatement selectStmt = connection.prepareStatement("SELECT student_id FROM students");
+             ResultSet rs = selectStmt.executeQuery()) {
 
-            ResultSet rs = selectStmt.executeQuery();
-            int groupCount = 10;
+            int groupCount = GROUP_COUNT;
+
             while (rs.next()) {
                 int studentId = rs.getInt("student_id");
                 int groupId = random.nextInt(groupCount) + 1; // Random group id between 1 and 10
@@ -84,39 +100,35 @@ private static final String[] COURSES = {"Math", "Biology", "Art", "Music", "Eng
                 updateStmt.setInt(2, studentId);
                 updateStmt.executeUpdate();
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error assigning students to groups", e);
         }
     }
 
-    private static void assignCoursesToStudents() {
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            PreparedStatement insertStmt = connection.prepareStatement(
-                    "INSERT INTO student_courses (student_id, course_id) VALUES (?, ?) ON CONFLICT DO NOTHING");
-            PreparedStatement selectStmt = connection.prepareStatement("SELECT student_id FROM students");
+    private static void assignCoursesToStudents(Connection connection) throws SQLException {
+        try (PreparedStatement insertStmt = connection.prepareStatement(
+                "INSERT INTO student_courses (student_id, course_id) VALUES (?, ?) ON CONFLICT DO NOTHING");
+             PreparedStatement selectStmt = connection.prepareStatement("SELECT student_id FROM students")) {
+
             int courseCount = COURSES.length;
 
-            ResultSet rs = selectStmt.executeQuery();
-            while (rs.next()) {
-                int studentId = rs.getInt("student_id");
-                Set<Integer> assignedCourses = new HashSet<>();
-                int courseAssignments = random.nextInt(3) + 1; // Randomly assign 1 to 3 courses
+            try (ResultSet rs = selectStmt.executeQuery()) {
+                while (rs.next()) {
+                    int studentId = rs.getInt("student_id");
+                    Set<Integer> assignedCourses = new HashSet<>();
+                    int courseAssignments = random.nextInt(3) + 1; // Randomly assign 1 to 3 courses
 
-                for (int i = 0; i < courseAssignments; i++) {
-                    int courseId;
-                    do {
-                        courseId = random.nextInt(courseCount) + 1;
-                    } while (assignedCourses.contains(courseId));
+                    for (int i = 0; i < courseAssignments; i++) {
+                        int courseId;
+                        do {
+                            courseId = random.nextInt(courseCount) + 1;
+                        } while (assignedCourses.contains(courseId));
 
-                    assignedCourses.add(courseId);
-                    insertStmt.setInt(1, studentId);
-                    insertStmt.setInt(2, courseId);
-                    insertStmt.executeUpdate();
+                        assignedCourses.add(courseId);
+                        insertStmt.setInt(1, studentId);
+                        insertStmt.setInt(2, courseId);
+                        insertStmt.executeUpdate();
+                    }
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error assigning courses to students", e);
         }
     }
-
 }
