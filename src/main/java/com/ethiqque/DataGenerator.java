@@ -6,9 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Random;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 
 public class DataGenerator {
@@ -32,15 +30,39 @@ public class DataGenerator {
         }
     }
 
-    private static void generateGroups(Connection connection, int count) throws SQLException {
+    public static void generateGroups(Connection connection, int count) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO groups (group_name) VALUES (?)")) {
-            for (int i = 0; i < count; i++) {
-                String groupName = "G" + (i + 1);
-                statement.setString(1, groupName);
+            List<Character> letters = new ArrayList<>();
+            for (char c = 'A'; c <= 'J'; c++) {
+                letters.add(c);
+            }
+
+            Random random = new Random();
+
+            for (int i = 10; i < 21; i++) {
+                char firstLetter;
+                char secondLetter;
+                char hyphen = '-';
+                int num = i;
+
+                do {
+                    firstLetter = letters.get(random.nextInt(10));
+                    secondLetter = letters.get(random.nextInt(10));
+                } while (firstLetter == secondLetter);
+
+                List<Character> pair = new ArrayList<>();
+                pair.add(firstLetter);
+                pair.add(secondLetter);
+                Collections.sort(pair);
+
+                String letterPair = pair.get(0) + "" + pair.get(1) + hyphen + num;
+
+                statement.setString(1, letterPair);
                 statement.executeUpdate();
             }
         }
     }
+
 
     private static void generateCourses(Connection connection) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO courses (course_name, course_description) VALUES (?, ?)")) {

@@ -1,3 +1,59 @@
+//package com.ethiqque.
+//
+//
+//import java.util.ArrayList;
+//import java.util.Collections;
+//import java.util.List;
+//import java.util.Random;
+//
+//public class RandomLetterPairs {
+//
+//    public static void main(String[] args) {
+//        // Create a list of 10 different letters
+//        List<Character> letters = new ArrayList<>();
+//        for (char c = 'A'; c <= 'J'; c++) {
+//            letters.add(c);
+//        }
+//
+//        // Create a randomizer
+//        Random random = new Random();
+//
+//        // Create a list to store pairs of different letters
+//        List<String> letterPairs = new ArrayList<>();
+//
+//        // Generate 10 pairs of different letters
+//        for (int i = 0; i < 10; i++) {
+//            char firstLetter;
+//            char secondLetter;
+//
+//            // Randomly select two different letters
+//            do {
+//                firstLetter = letters.get(random.nextInt(10));
+//                secondLetter = letters.get(random.nextInt(10));
+//            } while (firstLetter == secondLetter);
+//
+//            // Sort the letters to ensure they are in alphabetical order
+//            List<Character> pair = new ArrayList<>();
+//            pair.add(firstLetter);
+//            pair.add(secondLetter);
+//            Collections.sort(pair);
+//
+//            // Convert the pair to a string and add it to the list
+//            String letterPair = pair.get(0) + "" + pair.get(1);
+//            letterPairs.add(letterPair);
+//        }
+//
+//        // Print the list of letter pairs
+//        for (String pair : letterPairs) {
+//            System.out.println(pair);
+//        }
+//    }
+//}
+
+
+
+
+
 //package com.ethiqque;
 //
 //import com.ethiqque.util.DatabaseConnection;
