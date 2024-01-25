@@ -13,7 +13,19 @@ public class DataGenerator {
 
     private static final String[] FIRST_NAMES = {"John", "Jane", "Mike", "Sue", "Tom", "Lily", "Chris", "Anna", "James", "Karen", "Ivan", "Masha", "Georgiy", "Egor", "Max", "Martin", "Romeo", "Misha", "Jonny", "Kate"};
     private static final String[] LAST_NAMES = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson", "Carnnegi", "Paul", "Martin", "Lee", "Perez", "Thomson", "Lewis", "Allen", "Scott", "Flores"};
-    private static final String[] COURSES = {"Math", "Biology", "Art", "Music", "English", "Physics", "Chemistry", "History", "Geography", "Physical Education"};
+    private static final String[] COURSES = {"Math", "Biology", "Art", "Music", "English", "Literature", "France", "History", "Geography", "Physical Education"};
+    private static final String[] COURSES_DESCRIPTION =
+            {"The language of numbers, patterns, and logic",
+            "The study of living organisms and their functions",
+            "Creative expression through visual or performance mediums",
+            "Creating and enjoying harmonious sound compositions",
+            "Language study and literature appreciation",
+            "Appreciating written and spoken artistic expression",
+            "Language, culture, and communication in French",
+            "Understanding past events and societies",
+            "Exploration of Earth''s physical and cultural features",
+            "Promoting fitness and well-being through physical activities"};
+
     private static final Random random = new Random();
 
     private static final int GROUP_COUNT = 10;
@@ -64,15 +76,28 @@ public class DataGenerator {
     }
 
 
+//    private static void generateCourses(Connection connection) throws SQLException {
+//        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO courses (course_name, course_description) VALUES (?, ?)")) {
+//            for (String course : COURSES) {
+//                statement.setString(1, course);
+//                statement.executeUpdate();
+//            }
+//            for (String course_description : COURSES_DESCRIPTION) {
+//                statement.setString(2, "Description of " + course_description);
+//                statement.executeUpdate();
+//            }
+//        }
+//    }
     private static void generateCourses(Connection connection) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO courses (course_name, course_description) VALUES (?, ?)")) {
-            for (String course : COURSES) {
-                statement.setString(1, course);
-                statement.setString(2, "Description of " + course);
+            for (int i = 0; i < COURSES.length; i++) {
+                statement.setString(1, COURSES[i]);
+                statement.setString(2, COURSES_DESCRIPTION[i]);
                 statement.executeUpdate();
             }
         }
     }
+
 
     private static void generateStudents(Connection connection, int count) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO students (first_name, last_name) VALUES (?, ?)")) {
