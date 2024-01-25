@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 public class DataGenerator {
@@ -75,19 +77,6 @@ public class DataGenerator {
         }
     }
 
-
-//    private static void generateCourses(Connection connection) throws SQLException {
-//        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO courses (course_name, course_description) VALUES (?, ?)")) {
-//            for (String course : COURSES) {
-//                statement.setString(1, course);
-//                statement.executeUpdate();
-//            }
-//            for (String course_description : COURSES_DESCRIPTION) {
-//                statement.setString(2, "Description of " + course_description);
-//                statement.executeUpdate();
-//            }
-//        }
-//    }
     private static void generateCourses(Connection connection) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO courses (course_name, course_description) VALUES (?, ?)")) {
             for (int i = 0; i < COURSES.length; i++) {
@@ -138,17 +127,47 @@ public class DataGenerator {
              PreparedStatement selectStmt = connection.prepareStatement("SELECT student_id FROM students");
              ResultSet rs = selectStmt.executeQuery()) {
 
-            int groupCount = GROUP_COUNT;
+            int groupCount = 10;
+            int minGroupSize = 10;
+            int maxGroupSize = 30;
+
+            Map<Integer, Integer> groupSizes = new HashMap<>();
+            Random random = new Random();
+
+            for (int groupId = 1; groupId <= groupCount; groupId++) {
+                groupSizes.put(groupId, 0);
+            }
 
             while (rs.next()) {
                 int studentId = rs.getInt("student_id");
-                int groupId = random.nextInt(groupCount) + 1; // Random group id between 1 and 10
-                updateStmt.setInt(1, groupId);
-                updateStmt.setInt(2, studentId);
-                updateStmt.executeUpdate();
+
+                List<Integer> shuffledGroupIds = IntStream.rangeClosed(1, groupCount)
+                        .boxed()
+                        .collect(Collectors.toList());
+                Collections.shuffle(shuffledGroupIds);
+
+                int chosenGroupId = -1;
+                for (int groupId : shuffledGroupIds) {
+                    int currentGroupSize = groupSizes.get(groupId);
+                    if (currentGroupSize < maxGroupSize) {
+                        chosenGroupId = groupId;
+                        break;
+                    }
+                }
+
+                if (chosenGroupId != -1) {
+                    updateStmt.setInt(1, chosenGroupId);
+                    updateStmt.setInt(2, studentId);
+                    updateStmt.executeUpdate();
+
+                    groupSizes.put(chosenGroupId, groupSizes.get(chosenGroupId) + 1);
+                }
             }
         }
     }
+
+
+
 
     private static void assignCoursesToStudents(Connection connection) throws SQLException {
         try (PreparedStatement insertStmt = connection.prepareStatement(
@@ -161,7 +180,7 @@ public class DataGenerator {
                 while (rs.next()) {
                     int studentId = rs.getInt("student_id");
                     Set<Integer> assignedCourses = new HashSet<>();
-                    int courseAssignments = random.nextInt(3) + 1; // Randomly assign 1 to 3 courses
+                    int courseAssignments = random.nextInt(3) + 1;
 
                     for (int i = 0; i < courseAssignments; i++) {
                         int courseId;

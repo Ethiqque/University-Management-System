@@ -10,8 +10,6 @@ public class MainApplication {
     public static void main(String[] args) throws SQLException {
         DatabaseInitializer.initialize();
         DataGenerator.generateTestData();
-//        DatabaseConnection.connection.close();
-
     }
 }
 
