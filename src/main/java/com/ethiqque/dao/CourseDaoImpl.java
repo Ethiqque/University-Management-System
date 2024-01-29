@@ -18,13 +18,8 @@ public class CourseDaoImpl implements CourseDao {
             statement.setString(2, description);
             statement.executeUpdate();
         } catch (SQLException e) {
-            // Exception handling
+            e.printStackTrace();
         }
-    }
-
-    @Override
-    public static void addAll(List<Course> courses) {
-        // Implementation for adding a list of courses
     }
 }
 

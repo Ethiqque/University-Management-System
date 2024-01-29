@@ -1,2 +1,2 @@
 
-CREATE USER school_user WITH PASSWORD '1234';
+--CREATE USER school_user WITH PASSWORD '1234';

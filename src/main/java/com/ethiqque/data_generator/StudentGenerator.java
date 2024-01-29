@@ -1,23 +1,69 @@
 package com.ethiqque.data_generator;
 
 import com.ethiqque.dao.StudentDao;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Random;
 
 public class StudentGenerator {
 
-    public static void generateData() {
-        StudentDao studentDao = new StudentDao() {
-            @Override
-            public void addStudent(String firstName, String lastName) {
+    private static final Random random = new Random();
 
-            }
-        };
+    public static final String[] FIRST_NAMES = {"John", "Jane", "Mike", "Sue", "Tom", "Lily", "Chris", "Anna", "James", "Karen", "Ivan", "Masha", "Georgiy", "Egor", "Max", "Martin", "Romeo", "Misha", "Jonny", "Kate"};
+    public static final String[] LAST_NAMES = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson", "Carnnegi", "Paul", "Martin", "Lee", "Perez", "Thomson", "Lewis", "Allen", "Scott", "Flores"};
 
-        studentDao.addStudent("John", "Doe");
-        studentDao.addStudent("Jane", "Doe");
+    public static void generateData(StudentDao studentDao) {
+        Set<String> existingNames = new HashSet<>();
+
+        for (int i = 0; i < 200; i++) {
+            String firstName;
+            String lastName;
+            String fullName;
+
+            do {
+                firstName = FIRST_NAMES[random.nextInt(FIRST_NAMES.length)];
+                lastName = LAST_NAMES[random.nextInt(LAST_NAMES.length)];
+                fullName = firstName + " " + lastName;
+            } while (existingNames.contains(fullName));
+
+            studentDao.addStudent(firstName, lastName);
+            existingNames.add(fullName);
+        }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+//package com.ethiqque.data_generator;
+//
+//import com.ethiqque.dao.StudentDao;
+//import java.util.ArrayList;
+//import java.util.List;
+//
+//public class StudentGenerator {
+//
+//    public static void generateData() {
+//        StudentDao studentDao = new StudentDao() {
+//            @Override
+//            public void addStudent(String firstName, String lastName) {
+//
+//            }
+//        };
+//
+//        studentDao.addStudent("John", "Doe");
+//        studentDao.addStudent("Jane", "Doe");
+//    }
+//}
 
 
 

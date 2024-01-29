@@ -17,7 +17,7 @@ public class GroupDaoImpl implements GroupDao {
             statement.setString(1, groupName);
             statement.executeUpdate();
         } catch (SQLException e) {
-            // Exception handling
+            e.printStackTrace();
         }
     }
 }
