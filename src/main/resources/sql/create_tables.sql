@@ -1,6 +1,3 @@
-
-
--- Grant all privileges on the database to the new user.
 GRANT ALL PRIVILEGES ON DATABASE school TO school_user;
 
 DROP TABLE IF EXISTS student_courses;
