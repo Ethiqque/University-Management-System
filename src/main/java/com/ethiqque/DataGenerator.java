@@ -15,8 +15,9 @@ public class DataGenerator {
         StudentDaoImpl studentDaoImpl = new StudentDaoImpl();
         CourseDaoImpl courseDaoIml = new CourseDaoImpl();
 
+        int numberOfGroups = 10;
         GroupGenerator.generateData(groupDaoImpl);
-        StudentGenerator.generateData(studentDaoImpl);
+        StudentGenerator.generateData(studentDaoImpl, numberOfGroups);
 
 
     }
