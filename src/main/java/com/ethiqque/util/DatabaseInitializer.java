@@ -10,22 +10,17 @@ public class DatabaseInitializer {
         try (Connection connection = DatabaseConnection.getConnection();
              Statement statement = connection.createStatement()) {
 
-            // Execute script to create user
             String sql = FileReader.readFile("sql/create_user.sql");
             statement.execute(sql);
 
-            // Execute script to create database
             sql = FileReader.readFile("sql/create_database.sql");
             statement.execute(sql);
 
-            // Execute script to create tables
             sql = FileReader.readFile("sql/create_tables.sql");
             statement.execute(sql);
 
-            // Log or print a message indicating successful initialization
             System.out.println("Database has been initialized successfully.");
         } catch (SQLException e) {
-            // Log or print the exception details
             System.err.println("Failed to initialize database: " + e.getMessage());
             throw new RuntimeException("Failed to initialize database", e);
         }

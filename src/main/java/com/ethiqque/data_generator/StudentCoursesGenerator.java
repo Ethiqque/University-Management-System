@@ -22,7 +22,6 @@ public class StudentCoursesGenerator {
                 for (int i = 0; i < coursesCount; i++) {
                     int courseId = random.nextInt(10) + 1;
                     studentCoursesDao.addStudentCourses(studentId, courseId);
-                    System.out.println("student_id: " + studentId + ", course_id: " + courseId);
                 }
             }
         } catch (Exception e) {
