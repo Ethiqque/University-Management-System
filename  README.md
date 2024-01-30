@@ -18,14 +18,17 @@ Open your terminal and execute the following commands:
    ```shell
    psql -U postgres -c "CREATE USER school_user WITH PASSWORD '1234';"
 
-2. **Create a database:*
+2. **Create a database:**
+   ```shell
    psql -U postgres -c "CREATE DATABASE school;"
 
 
 3. **Assign privileges to the user:**
+   ```shell
    psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE school TO school_user;"
 
 
 4. **Create create_tables.sql file:**
+   ```shell
    psql -U school_user -d school -a -f path/to/sql/create_tables.sql
    
