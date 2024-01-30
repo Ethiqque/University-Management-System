@@ -21,13 +21,13 @@ CREATE TABLE students (
                           group_id INT,
                           first_name VARCHAR(255) NOT NULL,
                           last_name VARCHAR(255) NOT NULL,
-                          FOREIGN KEY (group_id) REFERENCES groups(group_id)
+                          FOREIGN KEY (group_id) REFERENCES groups(group_id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE student_courses (
                                  student_id INT,
                                  course_id INT,
                                  PRIMARY KEY (student_id, course_id),
-                                 FOREIGN KEY (student_id) REFERENCES students(student_id),
-                                 FOREIGN KEY (course_id) REFERENCES courses(course_id)
+                                 FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+                                 FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
 );

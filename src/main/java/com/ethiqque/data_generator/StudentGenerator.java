@@ -25,7 +25,7 @@ public class StudentGenerator {
                 firstName = FIRST_NAMES[random.nextInt(FIRST_NAMES.length)];
                 lastName = LAST_NAMES[random.nextInt(LAST_NAMES.length)];
                 fullName = firstName + " " + lastName;
-                groupId = 1 + random.nextInt(numberOfGroups); // Assuming group_id starts from 1
+                groupId = 1 + random.nextInt(numberOfGroups);
             } while (existingNames.contains(fullName));
 
             studentDao.addStudent(firstName, lastName, groupId);

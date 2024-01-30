@@ -18,7 +18,7 @@ public class StudentDaoImpl implements StudentDao {
             statement.setInt(3, groupId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace(); // Consider more robust error handling
+            e.printStackTrace();
         }
     }
 }
