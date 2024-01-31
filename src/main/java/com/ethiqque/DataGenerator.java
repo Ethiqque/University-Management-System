@@ -49,7 +49,7 @@ public class DataGenerator {
         List<String> groups = groupGenerator.generateData();
         groupDao.addAll(groups);
 
-        List<String[]> students = studentGenerator.generateData(10); // Assuming 10 groups
+        List<String[]> students = studentGenerator.generateData(10);
         studentDao.addAll(students);
 
         List<Map.Entry<Integer, Integer>> studentCourses = studentCoursesGenerator.generateData();
