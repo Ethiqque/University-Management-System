@@ -25,7 +25,7 @@ public class DataGenerator {
         try (Connection connection = DatabaseConnection.getConnection()) {
             StudentCoursesGenerator.generateData(connection, studentCoursesDaoImpl);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error in generating data for StudentCourses", e);
         }
     }
 }

@@ -21,11 +21,15 @@ public class StudentCoursesGenerator {
 
                 for (int i = 0; i < coursesCount; i++) {
                     int courseId = random.nextInt(10) + 1;
-                    studentCoursesDao.addStudentCourses(studentId, courseId);
+                    try {
+                        studentCoursesDao.addStudentCourses(studentId, courseId);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error in adding course for student", e);
+                    }
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error in processing student data", e);
         }
     }
 }
