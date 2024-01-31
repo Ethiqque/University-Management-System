@@ -16,11 +16,10 @@ public class StudentCoursesDaoImpl implements StudentCoursesDao {
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, studentCourse.getKey()); // student_id
-            statement.setInt(2, studentCourse.getValue()); // course_id
+            statement.setInt(1, studentCourse.getKey());
+            statement.setInt(2, studentCourse.getValue());
             statement.executeUpdate();
         } catch (SQLException e) {
-            // Consider a more sophisticated error handling strategy here
             throw new RuntimeException("SQL Exception in addStudentCourse", e);
         }
     }

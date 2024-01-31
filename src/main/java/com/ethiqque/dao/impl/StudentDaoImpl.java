@@ -9,11 +9,12 @@ import java.util.List;
 
 public class StudentDaoImpl implements StudentDao {
 
+    private static final String INSERT_SQL = "INSERT INTO students (first_name, last_name, group_id) VALUES (?, ?, ?)";
+
     @Override
     public void addStudent(String firstName, String lastName, int groupId) {
-        String sql = "INSERT INTO students (first_name, last_name, group_id) VALUES (?, ?, ?)";
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(INSERT_SQL)) {
 
             statement.setString(1, firstName);
             statement.setString(2, lastName);
@@ -24,11 +25,31 @@ public class StudentDaoImpl implements StudentDao {
         }
     }
 
+    @Override
     public void addAll(List<String[]> students) {
-        for (String[] student : students) {
-            if (student.length == 3) {
-                addStudent(student[0], student[1], Integer.parseInt(student[2]));
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(INSERT_SQL)) {
+
+            int count = 0;
+            for (String[] student : students) {
+                if (student.length == 3) {
+                    statement.setString(1, student[0]);
+                    statement.setString(2, student[1]);
+                    statement.setInt(3, Integer.parseInt(student[2]));
+                    statement.addBatch();
+
+                    if (++count % 100 == 0 || count == students.size()) {
+                        statement.executeBatch();
+                    }
+                }
             }
+
+            if (count % 100 != 0) {
+                statement.executeBatch();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("SQL Exception in addAll", e);
         }
     }
 }
+
