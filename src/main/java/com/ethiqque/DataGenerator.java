@@ -18,18 +18,31 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class DataGenerator {
-    private static CourseDao courseDao = new CourseDaoImpl();
-    private static GroupDao groupDao = new GroupDaoImpl();
-    private static CourseGenerator courseGenerator = new CourseGenerator();
-    private static GroupGenerator groupGenerator = new GroupGenerator();
+    private CourseDao courseDao;
+    private GroupDao groupDao;
+    private CourseGenerator courseGenerator;
+    private GroupGenerator groupGenerator;
 
-    private static StudentDao studentDao = new StudentDaoImpl();
-    private static StudentGenerator studentGenerator = new StudentGenerator();
+    private StudentDao studentDao;
+    private StudentGenerator studentGenerator;
 
-    private static StudentCoursesDao studentCoursesDao = new StudentCoursesDaoImpl();
-    private static StudentCoursesGenerator studentCoursesGenerator = new StudentCoursesGenerator();
+    private StudentCoursesDao studentCoursesDao;
+    private StudentCoursesGenerator studentCoursesGenerator;
 
-    public static void generateTestData() {
+    public DataGenerator (){
+            courseDao = new CourseDaoImpl();
+            groupDao = new GroupDaoImpl();
+            courseGenerator = new CourseGenerator();
+            groupGenerator = new GroupGenerator();
+
+            studentDao = new StudentDaoImpl();
+            studentGenerator = new StudentGenerator();
+
+            studentCoursesDao = new StudentCoursesDaoImpl();
+            studentCoursesGenerator = new StudentCoursesGenerator();
+        }
+
+    public void generateTestData() {
         List<Entry<String, String>> courses = courseGenerator.generateData();
         courseDao.addAll(courses);
 
