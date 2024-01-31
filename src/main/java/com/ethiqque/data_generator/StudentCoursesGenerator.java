@@ -8,7 +8,7 @@ import java.util.*;
 
 public class StudentCoursesGenerator {
 
-    public static List<Map.Entry<Integer, Integer>> generateData() {
+    public List<Map.Entry<Integer, Integer>> generateData() {
         Random random = new Random();
         List<Map.Entry<Integer, Integer>> studentCoursesList = new ArrayList<>();
 

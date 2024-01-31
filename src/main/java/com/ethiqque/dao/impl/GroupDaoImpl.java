@@ -9,7 +9,7 @@ import java.util.List;
 
 public class GroupDaoImpl implements GroupDao {
 
-    private static final String INSERT_SQL = "INSERT INTO groups (group_name) VALUES (?)";
+    private String INSERT_SQL = "INSERT INTO groups (group_name) VALUES (?)";
 
     @Override
     public void addGroup(String groupName) {

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class StudentDaoImpl implements StudentDao {
 
-    private static final String INSERT_SQL = "INSERT INTO students (first_name, last_name, group_id) VALUES (?, ?, ?)";
+    private String INSERT_SQL = "INSERT INTO students (first_name, last_name, group_id) VALUES (?, ?, ?)";
 
     @Override
     public void addStudent(String firstName, String lastName, int groupId) {

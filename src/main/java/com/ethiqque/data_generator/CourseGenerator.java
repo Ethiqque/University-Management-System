@@ -12,8 +12,8 @@ import java.util.Map.Entry;
 
 public class CourseGenerator {
 
-    public static final String[] COURSES = {"Math", "Biology", "Art", "Music", "English", "Literature", "French", "History", "Geography", "Physical Education"};
-    public static final String[] COURSES_DESCRIPTION = {
+    public String[] COURSES = {"Math", "Biology", "Art", "Music", "English", "Literature", "French", "History", "Geography", "Physical Education"};
+    public String[] COURSES_DESCRIPTION = {
             "The language of numbers, patterns, and logic",
             "The study of living organisms and their functions",
             "Creative expression through visual or performance mediums",

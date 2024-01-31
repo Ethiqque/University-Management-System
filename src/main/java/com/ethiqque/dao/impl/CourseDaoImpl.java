@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 
 public class CourseDaoImpl implements CourseDao {
 
-    private static final String INSERT_SQL = "INSERT INTO courses (course_name, course_description) VALUES (?, ?)";
+    private String INSERT_SQL = "INSERT INTO courses (course_name, course_description) VALUES (?, ?)";
 
     @Override
     public void addCourse(Entry<String, String> course) {
