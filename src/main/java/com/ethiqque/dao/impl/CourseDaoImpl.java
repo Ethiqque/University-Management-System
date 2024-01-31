@@ -10,11 +10,13 @@ import java.util.Map.Entry;
 
 public class CourseDaoImpl implements CourseDao {
 
+    private static final String INSERT_SQL = "INSERT INTO courses (course_name, course_description) VALUES (?, ?)";
+
     @Override
     public void addCourse(Entry<String, String> course) {
-        String sql = "INSERT INTO courses (course_name, course_description) VALUES (?, ?)";
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(INSERT_SQL)) {
+
             statement.setString(1, course.getKey());
             statement.setString(2, course.getValue());
             statement.executeUpdate();
@@ -25,8 +27,25 @@ public class CourseDaoImpl implements CourseDao {
 
     @Override
     public void addAll(List<Entry<String, String>> courses) {
-        for (Entry<String, String> course : courses) {
-            addCourse(course);
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(INSERT_SQL)) {
+
+            int count = 0;
+            for (Entry<String, String> course : courses) {
+                statement.setString(1, course.getKey());
+                statement.setString(2, course.getValue());
+                statement.addBatch();
+
+                if (++count % 100 == 0 || count == courses.size()) {
+                    statement.executeBatch();
+                }
+            }
+
+            if (count % 100 != 0) {
+                statement.executeBatch();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("SQL Exception in addAll", e);
         }
     }
 }
