@@ -1,6 +1,6 @@
 package com.ethiqque.data_generator;
 
-import com.ethiqque.dao.CourseDaoImpl;
+import com.ethiqque.dao.impl.CourseDaoImpl;
 
 public class CourseGenerator {
 

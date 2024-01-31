@@ -1,9 +1,8 @@
 package com.ethiqque;
 
-import com.ethiqque.dao.CourseDaoImpl;
-import com.ethiqque.dao.GroupDaoImpl;
-import com.ethiqque.dao.StudentCoursesDaoImpl;
-import com.ethiqque.dao.StudentDaoImpl;
+import com.ethiqque.dao.impl.GroupDaoImpl;
+import com.ethiqque.dao.impl.StudentCoursesDaoImpl;
+import com.ethiqque.dao.impl.StudentDaoImpl;
 import com.ethiqque.data_generator.CourseGenerator;
 import com.ethiqque.data_generator.GroupGenerator;
 import com.ethiqque.data_generator.StudentCoursesGenerator;

@@ -1,5 +1,6 @@
-package com.ethiqque.dao;
+package com.ethiqque.dao.impl;
 
+import com.ethiqque.dao.StudentDao;
 import com.ethiqque.util.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
