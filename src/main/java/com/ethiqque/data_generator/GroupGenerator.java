@@ -1,6 +1,5 @@
 package com.ethiqque.data_generator;
 
-import com.ethiqque.dao.GroupDao;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,13 +7,14 @@ import java.util.Random;
 
 public class GroupGenerator {
 
-    public static void generateData(GroupDao groupDao) {
+    public List<String> generateData() {
         List<Character> letters = new ArrayList<>();
         for (char c = 'A'; c <= 'J'; c++) {
             letters.add(c);
         }
 
         Random random = new Random();
+        List<String> groupList = new ArrayList<>();
 
         for (int i = 10; i < 21; i++) {
             char firstLetter;
@@ -33,9 +33,9 @@ public class GroupGenerator {
             Collections.sort(pair);
 
             String letterPair = pair.get(0) + "" + pair.get(1) + hyphen + num;
-
-            groupDao.addGroup(letterPair);
+            groupList.add(letterPair);
         }
+
+        return groupList;
     }
 }
-

@@ -2,18 +2,20 @@ package com.ethiqque.data_generator;
 
 import com.ethiqque.dao.StudentDao;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.Random;
 
 public class StudentGenerator {
-
     private static final Random random = new Random();
 
     public static final String[] FIRST_NAMES = {"John", "Jane", "Mike", "Sue", "Tom", "Lily", "Chris", "Anna", "James", "Karen", "Ivan", "Masha", "Georgiy", "Egor", "Max", "Martin", "Romeo", "Misha", "Jonny", "Kate"};
     public static final String[] LAST_NAMES = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson", "Carnnegi", "Paul", "Martin", "Lee", "Perez", "Thomson", "Lewis", "Allen", "Scott", "Flores"};
 
-    public static void generateData(StudentDao studentDao, int numberOfGroups) {
+    public static List<String[]> generateData(int numberOfGroups) {
         Set<String> existingNames = new HashSet<>();
+        List<String[]> students = new ArrayList<>();
 
         for (int i = 0; i < 200; i++) {
             String firstName;
@@ -28,9 +30,63 @@ public class StudentGenerator {
                 groupId = 1 + random.nextInt(numberOfGroups);
             } while (existingNames.contains(fullName));
 
-            studentDao.addStudent(firstName, lastName, groupId);
+            students.add(new String[]{firstName, lastName, String.valueOf(groupId)});
             existingNames.add(fullName);
         }
+
+        return students;
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//package com.ethiqque.data_generator;
+//
+//import com.ethiqque.dao.StudentDao;
+//import java.util.HashSet;
+//import java.util.Set;
+//import java.util.Random;
+//
+//public class StudentGenerator {
+//
+//    private static final Random random = new Random();
+//
+//    public static final String[] FIRST_NAMES = {"John", "Jane", "Mike", "Sue", "Tom", "Lily", "Chris", "Anna", "James", "Karen", "Ivan", "Masha", "Georgiy", "Egor", "Max", "Martin", "Romeo", "Misha", "Jonny", "Kate"};
+//    public static final String[] LAST_NAMES = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson", "Carnnegi", "Paul", "Martin", "Lee", "Perez", "Thomson", "Lewis", "Allen", "Scott", "Flores"};
+//
+//    public static void generateData(StudentDao studentDao, int numberOfGroups) {
+//        Set<String> existingNames = new HashSet<>();
+//
+//        for (int i = 0; i < 200; i++) {
+//            String firstName;
+//            String lastName;
+//            String fullName;
+//            int groupId;
+//
+//            do {
+//                firstName = FIRST_NAMES[random.nextInt(FIRST_NAMES.length)];
+//                lastName = LAST_NAMES[random.nextInt(LAST_NAMES.length)];
+//                fullName = firstName + " " + lastName;
+//                groupId = 1 + random.nextInt(numberOfGroups);
+//            } while (existingNames.contains(fullName));
+//
+//            studentDao.addStudent(firstName, lastName, groupId);
+//            existingNames.add(fullName);
+//        }
+//    }
+//}
+//

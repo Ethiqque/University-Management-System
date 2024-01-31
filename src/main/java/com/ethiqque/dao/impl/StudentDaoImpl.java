@@ -5,6 +5,7 @@ import com.ethiqque.util.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 public class StudentDaoImpl implements StudentDao {
 
@@ -20,6 +21,14 @@ public class StudentDaoImpl implements StudentDao {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void addAll(List<String[]> students) {
+        for (String[] student : students) {
+            if (student.length == 3) {
+                addStudent(student[0], student[1], Integer.parseInt(student[2]));
+            }
         }
     }
 }
